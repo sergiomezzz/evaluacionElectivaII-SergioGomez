@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Personajes de la Guerra de las Galaxias</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Personajes de la Guerra de las Galaxias</h1>
+
+  <div>
+    <label for="planet-filter">Filtrar por planeta:</label>
+    <select id="planet-filter">
+      <option value="">Todos</option>
+      <% const planets = [...new Set(characters.map(c => c.homeworld))]; %>
+      <% planets.forEach(planet => { %>
+      <option value="<%= planet %>"><%= planet %></option>
+      <% }); %>
+    </select>
+
+    <label for="species-filter">Filtrar por especie:</label>
+    <select id="species-filter">
+      <option value="">Todas</option>
+      <% const species = [...new Set(characters.map(c => c.species))]; %>
+      <% species.forEach(specie => { %>
+      <option value="<%= specie %>"><%= specie %></option>
+      <% }); %>
+    </select>
+  </div>
+
+  <table id="characters-table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Planeta</th>
+        <th>Especie</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% characters.forEach(character => { %>
+      <tr data-planet="<%= character.homeworld %>" data-species="<%= character.species %>">
+        <td><%= character.name %></td>
+        <td><%= character.homeworld %></td>
+        <td><%= character.species %></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <script>
+    const planetFilter = document.getElementById('planet-filter');
+    const speciesFilter = document.getElementById('species-filter');
+    const tableRows = document.querySelectorAll('#characters-table tbody tr');
+
+    planetFilter.addEventListener('change', () => {
+      filterCharacters();
+    });
+
+    speciesFilter.addEventListener('change', () => {
+      filterCharacters();
+    });
+
+    function filterCharacters() {
+      const planetValue = planetFilter.value;
+      const speciesValue = speciesFilter.value;
+
+      tableRows.forEach(row => {
+        const planet = row.getAttribute('data-planet');
+        const species = row.getAttribute('data-species');
+
+        if (
+          (planetValue === '' || planet === planetValue) &&
+          (speciesValue === '' || species === speciesValue)
+        ) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
